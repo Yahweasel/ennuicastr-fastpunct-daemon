@@ -26,6 +26,6 @@ fi
 . venv/bin/activate
 while true
 do
-    ./ennuicastr-fastpunct-daemon.py || true
+    nice -n10 chrt -i 0 ./ennuicastr-fastpunct-daemon.py || true
     sleep 10
 done
