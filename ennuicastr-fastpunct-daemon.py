@@ -17,15 +17,17 @@ import json
 import os
 import socketserver
 
+from nnsplit import NNSplit
 from fastpunct import FastPunct
 
 # Do some pre-punctuation just to prime the pump
+splitter = NNSplit.load("en")
 fastpunct = FastPunct()
-fastpunct.punct([
-    "john smiths dog is creating a ruccus",
-    "ys jagan is the chief minister of andhra pradesh",
-    "we visted new york last year in may"
-])
+fastpunct.punct(
+    list(map(str, splitter.split(["john smiths dog is creating a ruccus " +
+    "ys jagan is the chief minister of andhra pradesh " +
+    "we visted new york last year in may"])[0]))
+)
 
 # Get the server socket
 addr = "/tmp/ennuicastr-fastpunct-daemon.sock"
@@ -33,6 +35,16 @@ try:
     os.unlink(addr)
 except OSError:
     pass
+
+# Segmenter-punctuator
+def punctuate(line):
+    return " ".join(
+        fastpunct.punct(
+            list(map(str,
+                splitter.split([line])[0]
+            ))
+        )
+    )
 
 # Main server
 class FastPunctDaemonReqHandler(socketserver.StreamRequestHandler):
@@ -46,7 +58,7 @@ class FastPunctDaemonReqHandler(socketserver.StreamRequestHandler):
             try:
                 obj = json.loads(line)
                 # Expected format: {"c":"fastpunct","i":[array of strings]}
-                res = fastpunct.punct(obj["i"])
+                res = list(map(punctuate, obj["i"]))
                 # Return format: {"o":[result]}
                 ress = json.dumps({
                     "o": res

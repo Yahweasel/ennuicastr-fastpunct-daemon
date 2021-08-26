@@ -1,6 +1,7 @@
 This is an absurdly simple Unix domain socket server for
-[fastPunct](https://github.com/notAI-tech/fastpunct). Connect to its socket,
-and then give input like so:
+[fastPunct](https://github.com/notAI-tech/fastpunct) and
+[NNSplit](https://github.com/bminixhofer/nnsplit). Connect to its socket, and
+then give input like so:
 
 ```json
 {"c":"fastpunct","i":["hello world"]}

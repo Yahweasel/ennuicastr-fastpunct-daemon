@@ -8,5 +8,5 @@ setup(
     author = "Yahweasel",
     author_email = "git-rpo@yahweasel.com",
     license = "ISC",
-    install_requires = ["fastpunct"]
+    install_requires = ["fastpunct", "nnsplit"]
 )
